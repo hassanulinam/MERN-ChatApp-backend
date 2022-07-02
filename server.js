@@ -1,24 +1,25 @@
 const express = require("express");
-const app = express();
-app.use(express.json());
 const chats = require("./data/dummyData");
+const connectDB = require("./config/db");
+const colors = require("colors");
+const userRoutes = require("./routes/userRoutes");
 
 const dotenv = require("dotenv");
+const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 dotenv.config();
+connectDB();
+
+const app = express();
+app.use(express.json());
 
 app.get("/", (_request, response) => {
-  response.send("Connected to Server...");
+  response.send("Connected to Server..., API is running.");
 });
 
-app.get("/api/chats", (_req, response) => {
-  response.send(chats);
-});
+app.use("/api/user", userRoutes);
 
-app.get("/chats/:id", (request, response) => {
-  const { id } = request.params;
-  const data = chats.find((c) => c._id === id) || "Not Found";
-  response.send(data);
-});
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+app.listen(PORT, () => console.log(`Listening on ${PORT}`.yellow.bold));
