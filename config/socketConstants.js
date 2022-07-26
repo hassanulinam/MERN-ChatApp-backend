@@ -10,8 +10,8 @@ const socketActions = {
 const socketEmissions = {
   connected: "connected",
   msgReceived: "message received",
-  typingStarted: "typing now",
-  typingStopped: "typing stopped",
+  startTyping: "typing",
+  stopTyping: "typing off",
 };
 
 module.exports = { socketActions, socketEmissions };

@@ -51,10 +51,10 @@ io.on(socketActions.connection, (socket) => {
 
   // typing indication functionality
   socket.on(socketActions.startTyping, (room) =>
-    socket.in(room).emit(socketEmissions.typingStarted)
+    socket.in(room).emit(socketEmissions.startTyping)
   );
   socket.on(socketActions.stopTyping, (room) =>
-    socket.in(room).emit(socketEmissions.typingStopped)
+    socket.in(room).emit(socketEmissions.stopTyping)
   );
 
   // when new message is sent, push it to the receivers.
@@ -67,5 +67,10 @@ io.on(socketActions.connection, (socket) => {
       if (user._id === newMsgReceived.sender._id) return;
       socket.in(user._id).emit(socketEmissions.msgReceived, newMsgReceived);
     });
+  });
+
+  socket.off(socketActions.setup, () => {
+    console.log("USER DISCONNECTED");
+    socket.leave(userData._id);
   });
 });
